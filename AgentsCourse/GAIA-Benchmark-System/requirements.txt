@@ -1,0 +1,30 @@
+# Core Framework
+langgraph>=0.2.0
+langchain-core>=0.3.0
+langchain-google-genai>=2.0.0
+langchain-groq>=1.0.0
+groq>=0.30.0
+
+# Gradio UI (for HF Space)
+gradio>=5.0.0
+
+# Web Search & Scraping
+duckduckgo-search>=6.0.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# File Processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Audio Transcription
+openai>=1.30.0
+
+# YouTube Transcripts
+youtube-transcript-api>=0.6.0
+
+# Image Processing
+Pillow>=10.0.0
+
+# Environment Variables
+python-dotenv>=1.0.0
