@@ -1,5 +1,5 @@
 """
-GAIA Agent — Core Agent built with LangGraph + Google Gemini.
+GAIA Agent — Core Agent built with LangGraph + Groq/Gemini.
 
 This agent routes questions through a ReAct loop with tools for:
 - Web search & Wikipedia lookup
@@ -40,11 +40,14 @@ from tools.multimedia import (
 )
 from tools.web_search import visit_webpage, web_search, wikipedia_search
 
+# The latest Gemini model (gemini-2.0-flash is deprecated as of 2026)
+GEMINI_MODEL = "gemini-3.8-flash"
+
 
 class GAIAAgent:
     """
     A LangGraph-based agent that answers GAIA benchmark questions using
-    Google Gemini (free) as the LLM backbone with multimodal capabilities.
+    Groq or Gemini as the LLM backbone with multimodal capabilities.
     """
 
     def __init__(self):
@@ -57,21 +60,59 @@ class GAIAAgent:
 
         if groq_api_key:
             from langchain_groq import ChatGroq
+            from groq import Groq
 
-            groq_model = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-            print(f"Using Groq LLM: {groq_model} (14,400 RPD free tier)")
             self.provider = "groq"
             self.groq_api_key = groq_api_key
             self.gemini_api_key = gemini_api_key
+
+            # Discover available model on this Groq account
+            chosen_model = os.getenv("GROQ_MODEL")
+            if not chosen_model:
+                try:
+                    groq_client = Groq(api_key=groq_api_key)
+                    available_models = [m.id for m in groq_client.models.list().data]
+                    print(f"Available Groq models on account: {available_models}")
+
+                    # Preference order: models known to follow tool schemas well
+                    candidates = [
+                        "qwen/qwen3.8-27b",         # Best available on free tier
+                        "llama-3.3-70b-versatile",
+                        "llama-3.1-70b-versatile",
+                        "llama3-70b-8192",
+                        "llama-3.1-8b-instant",
+                        "llama3-8b-8192",
+                        "mixtral-8x7b-32768",
+                        "gemma2-9b-it",
+                    ]
+                    for cand in candidates:
+                        if cand in available_models:
+                            chosen_model = cand
+                            break
+                    if not chosen_model and available_models:
+                        # Filter out whisper/audio-only models
+                        text_models = [m for m in available_models if "whisper" not in m and "orpheus" not in m and "safeguard" not in m and "prompt-guard" not in m]
+                        if text_models:
+                            chosen_model = text_models[0]
+                        else:
+                            chosen_model = available_models[0]
+                except Exception as me:
+                    print(f"Model auto-discovery notice: {me}")
+                    chosen_model = "llama-3.1-8b-instant"
+
+            if not chosen_model:
+                chosen_model = "llama-3.1-8b-instant"
+
+            print(f"Using Groq LLM: {chosen_model} (14,400 RPD free tier)")
             self.llm = ChatGroq(
-                model=groq_model,
+                model=chosen_model,
                 groq_api_key=groq_api_key,
                 temperature=0.1,
                 max_tokens=4096,
                 max_retries=4,
             )
         elif gemini_api_key:
-            model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+            model_name = os.getenv("GEMINI_MODEL", GEMINI_MODEL)
             print(f"Using Gemini LLM: {model_name}")
             self.provider = "gemini"
             self.groq_api_key = None
@@ -88,6 +129,18 @@ class GAIAAgent:
                 "Neither GROQ_API_KEY nor GEMINI_API_KEY found! "
                 "Set GROQ_API_KEY (from https://console.groq.com/) or GEMINI_API_KEY in Space secrets."
             )
+
+        # Build the Gemini fallback LLM for synthesis (no tools, just text)
+        if gemini_api_key:
+            self.gemini_fallback = ChatGoogleGenerativeAI(
+                model=GEMINI_MODEL,
+                google_api_key=gemini_api_key,
+                temperature=0.1,
+                max_output_tokens=2048,
+                max_retries=3,
+            )
+        else:
+            self.gemini_fallback = None
 
         # Register all tools
         self.tools = [
@@ -144,6 +197,60 @@ class GAIAAgent:
 
         return info
 
+    def _synthesize_fallback(self, question: str, context: str = "") -> str:
+        """
+        Generate a final answer using Gemini (which properly respects tool_choice=none).
+        Falls back to Groq raw text if Gemini is unavailable.
+        """
+        prompt = f"Question: {question}\n\n"
+        if context:
+            prompt += f"Context gathered so far:\n{context}\n\n"
+        prompt += "Output ONLY the final exact answer. No explanation, no preamble, no tool calls."
+
+        # Try Gemini first (it reliably follows tool_choice=none)
+        if self.gemini_fallback:
+            try:
+                res = self.gemini_fallback.invoke(
+                    [
+                        SystemMessage(content="You are an expert. Output ONLY the exact answer to the question. No explanation. No tool calls. Just the answer."),
+                        HumanMessage(content=prompt),
+                    ]
+                )
+                answer = str(res.content).strip()
+                if answer:
+                    print(f"Gemini fallback synthesis: {answer[:100]}")
+                    return answer
+            except Exception as ex:
+                print(f"Gemini fallback error: {ex}")
+
+        # If Gemini unavailable, try Groq without tools
+        try:
+            res = self.llm.invoke(
+                [
+                    SystemMessage(content="You are an expert. Output ONLY the exact answer. No explanation. No tool calls. Just the answer."),
+                    HumanMessage(content=prompt),
+                ]
+            )
+            answer = str(res.content).strip()
+            if answer:
+                return answer
+        except Exception as ex:
+            print(f"LLM fallback error: {ex}")
+
+        return "Unable to determine the answer."
+
+    def _extract_context_from_messages(self, messages: list) -> str:
+        """Extract useful context from tool call results in the message history."""
+        context_parts = []
+        for msg in messages:
+            if hasattr(msg, 'content') and isinstance(msg.content, str):
+                # Tool messages contain search results, page content, etc.
+                if hasattr(msg, 'type') and msg.type == 'tool':
+                    # Truncate very long tool outputs
+                    content = msg.content[:3000] if len(msg.content) > 3000 else msg.content
+                    context_parts.append(content)
+        return "\n---\n".join(context_parts[-3:])  # Last 3 tool results
+
     def __call__(self, question: str, task_id: str = None, file_name: str = "") -> str:
         """
         Process a GAIA question and return the answer.
@@ -190,27 +297,27 @@ class GAIAAgent:
             try:
                 result = self.agent.invoke(
                     {"messages": messages},
-                    config={"recursion_limit": 14},
+                    config={"recursion_limit": 20},
                 )
                 break
             except GraphRecursionError:
-                print("Notice: Tool recursion limit reached (max 6-7 tool calls). Generating concise final answer directly...")
-                try:
-                    direct_res = self.llm.invoke(
-                        [
-                            SystemMessage(content=SYSTEM_PROMPT),
-                            HumanMessage(
-                                content=f"Question: {question}\n\nOutput ONLY the final exact answer without preamble:"
-                            ),
-                        ]
-                    )
-                    result = {"messages": [direct_res]}
-                    break
-                except Exception as ex:
-                    print(f"Fallback synthesis error: {ex}")
-                    break
+                print("Notice: Tool recursion limit reached. Running fallback synthesis...")
+                # Extract any context from partial results
+                answer = self._synthesize_fallback(question)
+                answer = self._clean_answer(answer)
+                print(f"Answer: {answer}")
+                return answer
             except Exception as e:
                 err_str = str(e)
+
+                # Handle tool hallucination errors — retry with stricter prompt
+                if "tool_use_failed" in err_str or "was not in request.tools" in err_str:
+                    print(f"Tool hallucination detected (attempt {attempt+1}). Switching to direct synthesis...")
+                    answer = self._synthesize_fallback(question)
+                    answer = self._clean_answer(answer)
+                    print(f"Answer: {answer}")
+                    return answer
+
                 if any(code in err_str for code in ["429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE"]) and attempt < max_attempts - 1:
                     wait_time = 15 if any(c in err_str for c in ["429", "RESOURCE_EXHAUSTED"]) else 6
                     err_type = "429 Rate Limit" if any(c in err_str for c in ["429", "RESOURCE_EXHAUSTED"]) else "503 High Demand"
@@ -218,10 +325,17 @@ class GAIAAgent:
                     time.sleep(wait_time)
                 else:
                     print(f"Agent error: {str(e)}")
-                    return f"Error: {str(e)}"
+                    # Instead of returning an error, try synthesis
+                    answer = self._synthesize_fallback(question)
+                    answer = self._clean_answer(answer)
+                    print(f"Answer: {answer}")
+                    return answer
 
         if result is None:
-            return "Unable to determine the answer."
+            answer = self._synthesize_fallback(question)
+            answer = self._clean_answer(answer)
+            print(f"Answer: {answer}")
+            return answer
 
         # Extract the final answer from the last AI message
         final_messages = result.get("messages", [])
@@ -242,19 +356,10 @@ class GAIAAgent:
 
         # Handle LangGraph recursion message if emitted inside AIMessage
         if "need more steps" in answer.lower():
-            print("Notice: Agent exceeded recursion steps. Running direct LLM synthesis...")
-            try:
-                direct_res = self.llm.invoke(
-                    [
-                        SystemMessage(content=SYSTEM_PROMPT),
-                        HumanMessage(
-                            content=f"Question: {question}\n\nOutput ONLY the final exact answer without preamble:"
-                        ),
-                    ]
-                )
-                answer = str(direct_res.content)
-            except Exception as ex:
-                print(f"Fallback synthesis error: {ex}")
+            print("Notice: Agent exceeded recursion steps. Running Gemini fallback synthesis...")
+            # Try to extract context from tool results
+            context = self._extract_context_from_messages(final_messages)
+            answer = self._synthesize_fallback(question, context)
 
         # Clean up the answer
         answer = self._clean_answer(answer)
@@ -267,20 +372,20 @@ class GAIAAgent:
         """Build messages with file content for multimodal questions."""
 
         if q_info["type"] == "image":
-            # For image questions (e.g. chess board), inspect image with Vision model
+            # For image questions (e.g. chess board), inspect image with Gemini Vision
             mime_type = get_mime_type(file_path)
             b64_data = encode_image_to_base64(file_path)
 
-            if self.provider == "groq":
+            # Use Gemini for flawless image analysis
+            if self.gemini_api_key:
                 try:
-                    # Groq provides llama-3.2-11b-vision-preview for image understanding
-                    from langchain_groq import ChatGroq
-                    vision_llm = ChatGroq(
-                        model="llama-3.2-11b-vision-preview",
-                        groq_api_key=self.groq_api_key,
+                    gemini_vision = ChatGoogleGenerativeAI(
+                        model=GEMINI_MODEL,
+                        google_api_key=self.gemini_api_key,
                         temperature=0.1,
+                        max_output_tokens=2048,
                     )
-                    vision_res = vision_llm.invoke(
+                    vision_res = gemini_vision.invoke(
                         [
                             SystemMessage(content=SYSTEM_PROMPT),
                             HumanMessage(
@@ -297,14 +402,14 @@ class GAIAAgent:
                         ]
                     )
                     image_desc = str(vision_res.content)
-                    print(f"Groq Vision analysis: {image_desc[:200]}...")
+                    print(f"Gemini Vision analysis: {image_desc[:200]}...")
                     enhanced_question = (
                         f"{question}\n\n"
-                        f"--- Visual Analysis of Attached Image ---\n{image_desc}"
+                        f"--- Visual Analysis of Attached Image (via Gemini Vision) ---\n{image_desc}"
                     )
                     messages.append(HumanMessage(content=enhanced_question))
                 except Exception as ve:
-                    print(f"Groq Vision error: {ve}")
+                    print(f"Gemini Vision error: {ve}")
                     messages.append(HumanMessage(content=f"{question}\n\n[Image attached: {file_path}]"))
             else:
                 messages.append(

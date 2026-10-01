@@ -1,0 +1,262 @@
+===== Run 1: openai/gpt-oss-120b — Score: 25% (5/20) =====
+===== Application Startup at 2026-10-01 06:03:17 =====
+
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option to suppress this warning.
+
+------------------------------ GAIA Agent Starting ------------------------------
+✅ SPACE_HOST: asynk-gaia-benchmark-system.hf.space
+   Runtime URL: https://asynk-gaia-benchmark-system.hf.space.hf.space
+✅ SPACE_ID: Asynk/GAIA-Benchmark-System
+   Repo: https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System/tree/main
+✅ Gemini API key found
+---------------------------------------------------------------------------------
+
+Launching Gradio Interface...
+* Running on local URL:  http://0.0.0.0:7860
+
+To create a public link, set `share=True` in `launch()`.
+User logged in: Asynk
+Initializing GAIA Agent...
+Available Groq models on account: ['openai/gpt-oss-120b', 'whisper-large-v3', 'canopylabs/orpheus-v1-english', 'meta-llama/llama-prompt-guard-2-86m', 'whisper-large-v3-turbo', 'canopylabs/orpheus-arabic-saudi', 'meta-llama/llama-prompt-guard-2-22m', 'openai/gpt-oss-safeguard-20b', 'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'allam-2-7b']
+Using Groq LLM: openai/gpt-oss-120b (14,400 RPD free tier)
+GAIA Agent initialized with 7 tools on GROQ.
+Tools: ['web_search', 'visit_webpage', 'wikipedia_search', 'execute_python_code', 'execute_python_file', 'read_excel_file', 'get_youtube_transcript']
+Agent code link: https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System/tree/main
+Fetching questions from: https://agents-course-unit4-scoring.hf.space/questions
+Fetched 20 questions.
+Running agent on 20 questions...
+
+[1/20] Processing task: 8e867cd7-cff9-4e6c-867a-ff5ddc2550be
+Question: How many studio albums were published by Mercedes Sosa between 2000 and 2009 (included)?
+Agent error: Tool call validation failed: attempted to call tool 'find_in_page' which was not in request.tools
+
+[2/20] Processing task: a1e91b78-d3d8-4675-bb8d-62741b4b68a6
+Question: In the video https://www.youtube.com/watch?v=L1vXCYZAYYM, what is the highest number of bird species...
+Notice: Agent exceeded recursion steps. Running direct LLM synthesis...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[3/20] Processing task: 2d83110e-a098-4ebb-9987-066c06fa42d0
+Question: .rewsna eht sa "tfel" drow eht fo etisoppo eht etirw ,ecnetnes siht dnatsrednu uoy fI...
+Answer: rightright
+
+[4/20] Processing task: cca530fc-4052-43b2-b130-b30968d8aa44
+Question: Review the chess position provided in the image...
+Gemini Vision error: gemini-2.0-flash is no longer available (404 NOT_FOUND)
+Answer: Qh2#
+
+[5/20] Processing task: 4fc2f1ae-8625-45b5-ab34-ad4433bc21f8
+Question: Who nominated the only Featured Article on English Wikipedia about a dinosaur...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[6/20] Processing task: 6f37996b-2ac7-44b0-8e68-6d28256631b4
+Question: Given this table defining * on the set S = {a, b, c, d, e}...
+Answer: b, e
+
+[7/20] Processing task: 9d191bce-651d-4746-be2d-7ef8ecadb9c2
+Question: What does Teal'c say in response...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[8/20] Processing task: cabe07ed-9eca-40ea-8ead-410ef5e83f91
+Question: What is the surname of the equine veterinarian...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[9/20] Processing task: 3cef3a44-215e-4aed-8e3b-b1e3f08063b7
+Question: I'm making a grocery list for my mom, but she's a professor of botany...
+Answer: broccoli, celery, fresh basil, lettuce, sweet potatoes
+
+[10/20] Processing task: 99c9cc74-fdc8-46c6-8f8d-3ce2d3bfeea3
+Question: Hi, I'm making a pie but I could use some help with my shopping list...
+Groq Whisper transcription (375 chars)
+Answer: cornstarch, granulated sugar, lemon juice, ripe strawberries, vanilla extract
+
+[11/20] Processing task: 305ac316-eef6-4446-960a-92d80d542f82
+Question: Who did the actor who played Ray in the Polish-language version...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[12/20] Processing task: f918266a-b3e0-4914-865d-4faa564f1aef
+Question: What is the final numeric output from the attached Python code?
+Answer: 0
+
+[13/20] Processing task: 3f57289b-8c60-48be-bd80-01f8099ca449
+Question: How many at bats did the Yankee with the most walks...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[14/20] Processing task: 1f975693-876d-457b-a649-393859e79bf3
+Question: Hi, I was out sick from my classes on Friday...
+Groq Whisper transcription (554 chars)
+Answer: 132, 133, 134, 197, 245
+
+[15/20] Processing task: 840bfca7-4f7b-481a-8794-c560c340185d
+Question: On June 6, 2023, an article by Carolyn Collins Petersen...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[16/20] Processing task: bda648d7-d618-4883-88f4-3466eabd860e
+Question: Where were the Vietnamese specimens described by Kuznetzov...
+Fallback synthesis error: Tool choice is none, but model called a tool
+Answer: Sorry, need more steps to process this request
+
+[17/20] Processing task: cf106601-ab4f-4af9-b045-5295fe67b37d
+Question: What country had the least number of athletes at the 1928 Summer Olympics?
+Agent error: Tool call validation failed: attempted to call tool 'find_in_page' which was not in request.tools
+
+[18/20] Processing task: a0c07678-e491-4bbc-8f0b-07405144218f
+Question: Who are the pitchers with the number before and after Taishō Tamai's number...
+Answer: Yamasaki, Uehara
+
+[19/20] Processing task: 7bd855d8-463d-4ed5-93ca-5fe35145f733
+Question: The attached Excel file contains the sales of menu items...
+Answer: $89706.00
+
+[20/20] Processing task: 5a0c1adf-205e-4841-a666-7c3ef95def9d
+Question: What is the first name of the only Malko Competition recipient...
+Answer: Claus
+
+Agent finished. Submitting 20 answers for user 'Asynk'...
+Submission successful.
+Score: 25.0% (5/20 correct)
+
+---
+
+===== Run 2: qwen/qwen3.8-27b — Score: 30% (6/20) ✅ PASS =====
+===== Application Startup at 2026-10-01 06:29:30 =====
+
+------------------------------ GAIA Agent Starting ------------------------------
+✅ SPACE_HOST: asynk-gaia-benchmark-system.hf.space
+   Runtime URL: https://asynk-gaia-benchmark-system.hf.space.hf.space
+✅ SPACE_ID: Asynk/GAIA-Benchmark-System
+   Repo: https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System/tree/main
+✅ Gemini API key found
+---------------------------------------------------------------------------------
+
+Launching Gradio Interface...
+* Running on local URL:  http://0.0.0.0:7860
+
+User logged in: Asynk
+Initializing GAIA Agent...
+Available Groq models on account: ['openai/gpt-oss-safeguard-20b', 'meta-llama/llama-prompt-guard-2-22m', 'canopylabs/orpheus-arabic-saudi', 'openai/gpt-oss-20b', 'allam-2-7b', 'meta-llama/llama-prompt-guard-2-86m', 'whisper-large-v3', 'openai/gpt-oss-120b', 'qwen/qwen3.8-27b', 'canopylabs/orpheus-v1-english', 'whisper-large-v3-turbo']
+Using Groq LLM: qwen/qwen3.8-27b (14,400 RPD free tier)
+GAIA Agent initialized with 7 tools on GROQ.
+Tools: ['web_search', 'visit_webpage', 'wikipedia_search', 'execute_python_code', 'execute_python_file', 'read_excel_file', 'get_youtube_transcript']
+Agent code link: https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System/tree/main
+Fetching questions from: https://agents-course-unit4-scoring.hf.space/questions
+Fetched 20 questions.
+Running agent on 20 questions...
+
+[1/20] Processing task: 8e867cd7-cff9-4e6c-867a-ff5ddc2550be
+Question: How many studio albums were published by Mercedes Sosa between 2000 and 2009 (included)?
+[429 Rate Limit] x3 retries
+Gemini fallback: 429 RESOURCE_EXHAUSTED (gemini-3.8-flash, 20 RPD limit)
+Answer: 3
+
+[2/20] Processing task: a1e91b78-d3d8-4675-bb8d-62741b4b68a6
+Question: In the video about bird species...
+Notice: Agent exceeded recursion steps.
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: The video is "Birds of the World" by Christopher Tin. The highest number of bird species on camera simultaneously is 10.
+
+[3/20] Processing task: 2d83110e-a098-4ebb-9987-066c06fa42d0
+Question: .rewsna eht sa "tfel" drow eht fo etisoppo eht etirw...
+Answer: right (with explanation text before it)
+
+[4/20] Processing task: cca530fc-4052-43b2-b130-b30968d8aa44
+Question: Review the chess position...
+Gemini Vision error: 429 RESOURCE_EXHAUSTED (gemini-3.8-flash)
+Agent error: 413 Request too large (8805 tokens vs 7000 ITPM limit)
+Answer: Qxh2
+
+[5/20] Processing task: 4fc2f1ae-8625-45b5-ab34-ad4433bc21f8
+Question: Wikipedia dinosaur Featured Article...
+Agent error: 413 (11473 tokens vs 7000 ITPM limit)
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: User:Jmabel
+
+[6/20] Processing task: 6f37996b-2ac7-44b0-8e68-6d28256631b4
+Question: Given this table defining * on the set S = {a, b, c, d, e}...
+Answer: b, e
+
+[7/20] Processing task: 9d191bce-651d-4746-be2d-7ef8ecadb9c2
+Question: What does Teal'c say...
+Answer: Extremely
+
+[8/20] Processing task: cabe07ed-9eca-40ea-8ead-410ef5e83f91
+Question: Equine veterinarian surname...
+Agent error: 413 (8036 tokens vs 7000 ITPM)
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: Smith
+
+[9/20] Processing task: 3cef3a44-215e-4aed-8e3b-b1e3f08063b7
+Question: Grocery list for botany professor...
+Answer: broccoli, celery, fresh basil, lettuce, sweet potatoes
+
+[10/20] Processing task: 99c9cc74-fdc8-46c6-8f8d-3ce2d3bfeea3
+Question: Making a pie shopping list...
+Groq Whisper transcription (375 chars)
+Answer: cornstarch, granulated sugar, lemon juice, ripe strawberries, vanilla extract
+
+[11/20] Processing task: 305ac316-eef6-4446-960a-92d80d542f82
+Question: Polish-language Everybody Loves Raymond...
+Notice: Agent exceeded recursion steps.
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: Piotr
+
+[12/20] Processing task: f918266a-b3e0-4914-865d-4faa564f1aef
+Question: Final numeric output from Python code...
+Answer: 0
+
+[13/20] Processing task: 3f57289b-8c60-48be-bd80-01f8099ca449
+Question: Yankees walks 1977...
+Agent error: 413 (19184 tokens vs 7000 ITPM)
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: 5
+
+[14/20] Processing task: 1f975693-876d-457b-a649-393859e79bf3
+Question: Midterm study pages...
+Groq Whisper transcription (554 chars)
+Answer: 132, 133, 134, 197, 245
+
+[15/20] Processing task: 840bfca7-4f7b-481a-8794-c560c340185d
+Question: Carolyn Collins Petersen Universe Today...
+Agent error: 429 Rate limit (TPD: 200000 exhausted)
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: 80NSSC21K0553
+
+[16/20] Processing task: bda648d7-d618-4883-88f4-3466eabd860e
+Question: Vietnamese specimens by Kuznetzov...
+Agent error: 429 Rate limit (TPD exhausted)
+Gemini fallback: 429 RESOURCE_EXHAUSTED
+Answer: Moscow
+
+[17/20] Processing task: cf106601-ab4f-4af9-b045-5295fe67b37d
+Question: 1928 Summer Olympics least athletes...
+Agent error: 429 Rate limit (TPD exhausted)
+Gemini fallback synthesis: CUB (but returned as raw dict with signature — BUG)
+Answer: [raw dict with 'CUB']
+
+[18/20] Processing task: a0c07678-e491-4bbc-8f0b-07405144218f
+Question: Pitchers before and after Taishō Tamai...
+Agent error: 429 Rate limit (TPD exhausted)
+Gemini fallback: 503 UNAVAILABLE
+Answer: Kuroda, Ohtani
+
+[19/20] Processing task: 7bd855d8-463d-4ed5-93ca-5fe35145f733
+Question: Excel file sales of menu items...
+Agent error: 429 Rate limit (TPD exhausted)
+Gemini fallback synthesis: $215,420.00 (but returned as raw dict — BUG)
+Answer: [raw dict with '$215,420.00']
+
+[20/20] Processing task: 5a0c1adf-205e-4841-a666-7c3ef95def9d
+Question: Malko Competition recipient first name...
+Agent error: 429 Rate limit (OTPM exceeded)
+Gemini fallback synthesis: Claus (but returned as raw dict — BUG)
+Answer: [raw dict with 'Claus']
+
+Agent finished. Submitting 20 answers for user 'Asynk'...
+Submission successful.
+Score: 30% (6/20 correct) ✅ CERTIFICATE EARNED!

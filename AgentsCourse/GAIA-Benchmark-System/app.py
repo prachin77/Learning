@@ -212,8 +212,8 @@ with gr.Blocks(
 ) as demo:
     gr.Markdown(
         """
-        # 🤖 GAIA Agent — Final Assignment
-        ### HuggingFace Agents Course — LangGraph + Gemini 2.0 Flash
+        # 🤖 GAIA Benchmark System — Final Assignment
+        ### HuggingFace Agents Course — LangGraph + Groq Qwen 3.8-27B + Gemini 2.5 Flash
 
         ---
 
@@ -225,12 +225,10 @@ with gr.Blocks(
            - Submit answers for scoring (EXACT MATCH)
            - Display your score
 
-        **Agent Architecture:** LangGraph ReAct Agent → Gemini 2.0 Flash (free) → 7 Tools
+        **Agent Architecture:** LangGraph ReAct Agent → Groq Qwen 3.8-27B (reasoning) + Gemini 2.5 Flash (vision/fallback) + Whisper v3 (audio) → 7 Tools
         (web search, Wikipedia, page scraper, Python executor, Excel reader, YouTube transcripts, multimodal vision/audio)
 
         ---
-
-        > ⚠️ **Note:** Processing all 20 questions takes 3-8 minutes depending on question complexity.
         """
     )
 
