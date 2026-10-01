@@ -1,6 +1,6 @@
-# 🤖 GAIA Benchmark System — HuggingFace Agents Course Final Assignment
+# 🤖 GAIA Benchmark System
 
-> **Score: 30% (6/20) — Certificate Earned ✅**
+> **Score: 30% (6/20) ✅**
 > 
 > A LangGraph ReAct Agent that answers 20 GAIA benchmark questions using Groq (Qwen 3.8-27B) as the reasoning backbone, with Gemini 2.5 Flash for vision/fallback and Groq Whisper for audio transcription.
 
@@ -224,7 +224,7 @@ python app.py
 
 - **20 Level-1 questions** from the GAIA validation set
 - **Scoring:** EXACT MATCH (answer must match ground truth character-for-character)
-- **Pass threshold:** ≥30% (6/20) for certificate
+- **Pass threshold:** ≥30% (6/20)
 - **Question types:** Text, Image, Audio, Excel, Python, YouTube
 
 ---
