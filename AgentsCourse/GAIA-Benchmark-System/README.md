@@ -1,8 +1,14 @@
-# 🤖 GAIA Benchmark System
+# 🤖 GAIA Benchmark System — HuggingFace Agents Course Final Assignment
 
-> **Score: 30% (6/20) ✅**
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System)
+[![Course Leaderboard](https://img.shields.io/badge/Leaderboard-%235968%20(30%20pts)-brightgreen?style=for-the-badge)](https://huggingface.co/spaces/agents-course/Students_Leaderboard)
+
+> **Score: 30% (6/20) — Certificate Earned ✅**
 > 
 > A LangGraph ReAct Agent that answers 20 GAIA benchmark questions using Groq (Qwen 3.8-27B) as the reasoning backbone, with Gemini 2.5 Flash for vision/fallback and Groq Whisper for audio transcription.
+
+🌐 **Live Demo on Hugging Face:** [https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System](https://huggingface.co/spaces/Asynk/GAIA-Benchmark-System)  
+⚡ **Direct App Embed:** [https://asynk-gaia-benchmark-system.hf.space](https://asynk-gaia-benchmark-system.hf.space)
 
 [![Leaderboard](assets/leaderboard.png)](https://huggingface.co/spaces/agents-course/Students_Leaderboard)
 
@@ -224,7 +230,7 @@ python app.py
 
 - **20 Level-1 questions** from the GAIA validation set
 - **Scoring:** EXACT MATCH (answer must match ground truth character-for-character)
-- **Pass threshold:** ≥30% (6/20)
+- **Pass threshold:** ≥30% (6/20) for certificate
 - **Question types:** Text, Image, Audio, Excel, Python, YouTube
 
 ---
