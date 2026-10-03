@@ -1,0 +1,4 @@
+text,label,split
+Hello world,0,train
+Great job,1,train
+This is bad,0,test
